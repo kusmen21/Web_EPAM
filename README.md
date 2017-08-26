@@ -1,4 +1,4 @@
-# Web_EPAM
+This project is a realization of the hostel.
 
 Short description: the client registers, creates request for booking beds, looks through his current requests. 
 The administrator confirms (or denies) the request, 
@@ -8,6 +8,7 @@ changes the users data,
 looks at the current requests
 
 Этот проект представляет собой реализацию хостела.
+
 Краткое описание: клиент заполняет заявку на бронирование кроватей, просматривает свои текущие заявки. Администратор подтверждает (или отказывает) заявку, ставит бан пользователям, просматривает данные пользователей и их заявки, изменяет данные пользователей, просматривает актуальные заявки.
 
 Алгоритм работы системы хостела
