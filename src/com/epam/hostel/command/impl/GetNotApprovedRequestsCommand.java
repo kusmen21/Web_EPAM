@@ -9,16 +9,14 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import com.epam.hostel.bean.Request;
-import com.epam.hostel.command.Command;
 import com.epam.hostel.command.ExtendedСommand;
 import com.epam.hostel.resource.ConfigurationManager;
-import com.epam.hostel.resource.MessageManager;
 import com.epam.hostel.service.AdminService;
 import com.epam.hostel.service.ServiceFactory;
 import com.epam.hostel.service.exeption.ServiceException;
 
 public class GetNotApprovedRequestsCommand  extends ExtendedСommand {
-	private static Logger log = LogManager.getLogger(GetNotApprovedRequestsCommand.class);	
+	private static final Logger log = LogManager.getLogger(GetNotApprovedRequestsCommand.class);	
 	private static final String UNKNOWN_ERROR = "error.unknown_error";
 	private static final String INFO_NO_REQUESTS_FOUND = "info.no_requests_found";
 	
@@ -34,10 +32,10 @@ public class GetNotApprovedRequestsCommand  extends ExtendedСommand {
 		try {
 			List<Request> requests = adminService.getNotApprovedRequests();
 			if (requests == null){
-				request.getSession().setAttribute(ADMIN_ERROR_ATTRIBUTE, MessageManager.getProperty(UNKNOWN_ERROR));
+				request.getSession().setAttribute(ADMIN_ERROR_ATTRIBUTE, UNKNOWN_ERROR);
 			} else if (requests.isEmpty()) {
 				request.getSession().setAttribute(NOT_APPROVED_REQUESTS_ATTRIBUTE, requests);
-				request.getSession().setAttribute(ADMIN_INFO_ATTRIBUTE, MessageManager.getProperty(INFO_NO_REQUESTS_FOUND));
+				request.getSession().setAttribute(ADMIN_INFO_ATTRIBUTE, INFO_NO_REQUESTS_FOUND);
 			} else {
 				request.getSession().setAttribute(NOT_APPROVED_REQUESTS_ATTRIBUTE, requests);
 			}

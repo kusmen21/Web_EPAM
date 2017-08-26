@@ -8,16 +8,14 @@ import org.apache.log4j.Logger;
 
 import com.epam.hostel.bean.Administrator;
 import com.epam.hostel.bean.User;
-import com.epam.hostel.command.Command;
 import com.epam.hostel.command.ExtendedСommand;
 import com.epam.hostel.resource.ConfigurationManager;
-import com.epam.hostel.resource.MessageManager;
 import com.epam.hostel.service.LogInService;
 import com.epam.hostel.service.ServiceFactory;
 import com.epam.hostel.service.exeption.ServiceException;
 
-public class LoginCommand  extends ExtendedСommand {
-	private static Logger log = LogManager.getLogger(LoginCommand.class);
+public class LoginCommand extends ExtendedСommand {
+	private static final Logger log = LogManager.getLogger(LoginCommand.class);
 	private static final String ADMINISTRATOR = "admin";
 	private static final String LOGIN_INFO_ADMINISTRATOR = "info.login_administrator";
 	private static final String LOGIN_ERROR = "error.login";
@@ -38,12 +36,13 @@ public class LoginCommand  extends ExtendedСommand {
 			try {
 				administrator = logInService.getAdministrator(password);
 				if (administrator != null) {
-					request.getSession().invalidate();
+					Object localeObject = request.getSession().getAttribute(LOCALE);		
+					request.getSession().invalidate();	
+					request.getSession().setAttribute(LOCALE, localeObject);					
 					request.getSession().setAttribute(ADMIN_ATTRIBUTE, administrator);
-					request.getSession().setAttribute(LOGIN_INFO_ATTRIBUTE,
-					MessageManager.getProperty(LOGIN_INFO_ADMINISTRATOR));
+					request.getSession().setAttribute(LOGIN_INFO_ATTRIBUTE, LOGIN_INFO_ADMINISTRATOR);
 				} else {
-					request.getSession().setAttribute(LOGIN_ERROR_ATTRIBUTE, MessageManager.getProperty(LOGIN_ERROR));					
+					request.getSession().setAttribute(LOGIN_ERROR_ATTRIBUTE, LOGIN_ERROR);
 				}
 			} catch (ServiceException e) {
 				log.error(e);
@@ -56,15 +55,17 @@ public class LoginCommand  extends ExtendedСommand {
 				user = logInService.getUser(email, password);
 				if (user != null) {
 					// check is banned
-					if (user.isBanned()) {					
-						request.getSession().setAttribute(LOGIN_ERROR_ATTRIBUTE, MessageManager.getProperty(ERROR_USER_BANNED));
+					if (user.isBanned()) {
+						request.getSession().setAttribute(LOGIN_ERROR_ATTRIBUTE, ERROR_USER_BANNED);
 					} else {
+						Object localeObject = request.getSession().getAttribute(LOCALE);		
 						request.getSession().invalidate();
+						request.getSession().setAttribute(LOCALE, localeObject);
 						request.getSession().setAttribute(USER_ATTRIBUTE, user);
-						request.getSession().setAttribute(LOGIN_INFO_ATTRIBUTE, MessageManager.getProperty(LOGIN_INFO));
+						request.getSession().setAttribute(LOGIN_INFO_ATTRIBUTE, LOGIN_INFO);
 					}
 				} else {
-					request.getSession().setAttribute(LOGIN_ERROR_ATTRIBUTE, MessageManager.getProperty(LOGIN_ERROR));
+					request.getSession().setAttribute(LOGIN_ERROR_ATTRIBUTE, LOGIN_ERROR);
 				}
 			} catch (ServiceException e) {
 				log.error(e);

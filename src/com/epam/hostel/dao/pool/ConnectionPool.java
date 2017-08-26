@@ -33,7 +33,7 @@ import com.epam.hostel.dao.exception.ConnectionPoolException;
  * Thread safe connection pool
  */
 public final class ConnectionPool {
-	private static Logger log = LogManager.getLogger(ConnectionPool.class);
+	private static final Logger log = LogManager.getLogger(ConnectionPool.class);
 	private static final String EXCEPTION_IN_POOL = "SQLException in ConnectionPool ";
 	private static final String CANT_FIND_DATABASE_DRIVER = "Can't find database driver class ";
 	private static final String ERROR_CONNECTING = "Error connecting to the data source.";

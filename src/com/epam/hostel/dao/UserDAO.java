@@ -57,7 +57,7 @@ public interface UserDAO
 	boolean isPhoneFree(String phone) throws DAOException;
 	
 	/**
-	 * Deletes the user with specific id
+	 * Deletes user only if he does not have any requests
 	 * @param userId user id
 	 * @throws DAOException if any exceptions occurred on the SQL layer
 	 */

@@ -15,13 +15,12 @@ import com.epam.hostel.bean.Request;
 import com.epam.hostel.bean.User;
 import com.epam.hostel.command.ExtendedСommand;
 import com.epam.hostel.resource.ConfigurationManager;
-import com.epam.hostel.resource.MessageManager;
 import com.epam.hostel.service.RequestService;
 import com.epam.hostel.service.ServiceFactory;
 import com.epam.hostel.service.exeption.ServiceException;
 
 public class ShowUserRequestsCommand extends ExtendedСommand {
-	private static Logger log = LogManager.getLogger(ShowUserRequestsCommand.class);
+	private static final Logger log = LogManager.getLogger(ShowUserRequestsCommand.class);
 	private static final String USER_NOT_LOGGED = "error.user_not_logged";	
 	private static final String UNKNOWN_ERROR = "error.unknown_error";
 
@@ -41,7 +40,7 @@ public class ShowUserRequestsCommand extends ExtendedСommand {
 			try {
 				requests = requestService.getUserRequests(user.getId());
 				if (requests == null){
-					request.getSession().setAttribute(LOGIN_ERROR_ATTRIBUTE, MessageManager.getProperty(UNKNOWN_ERROR));
+					request.getSession().setAttribute(LOGIN_ERROR_ATTRIBUTE, UNKNOWN_ERROR);
 				} else {	
 					Map<Request, List<Bed>> actualRequests = requestService.getActualRequests(requests);
 					Map<Request, List<Bed>> oldRequests = requests;
@@ -55,7 +54,7 @@ public class ShowUserRequestsCommand extends ExtendedСommand {
 				page = ConfigurationManager.getProperty(ERROR_PAGE);
 			}
 		} else {
-			String errorMessage = MessageManager.getProperty(USER_NOT_LOGGED);
+			String errorMessage = USER_NOT_LOGGED;
 			log.error(errorMessage);
 			request.getSession().setAttribute(LOGIN_ERROR_ATTRIBUTE, errorMessage);
 			page = ConfigurationManager.getProperty(INDEX_PAGE);

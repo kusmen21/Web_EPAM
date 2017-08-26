@@ -63,7 +63,7 @@ public class AdminServiceTest {
 		try {
 			logInService.register(USER_EMAIL, USER_PASSWORD, USER_PHONE, USER_FNAME, USER_LNAME, USER_DATE);
 			user = logInService.getUser(USER_EMAIL, USER_PASSWORD);
-			Assert.assertTrue(service.banUser(user.getId()));
+			Assert.assertTrue(service.banUser(user.getId(), true));
 		} finally {
 			service.deleteUser(user.getId());
 		}

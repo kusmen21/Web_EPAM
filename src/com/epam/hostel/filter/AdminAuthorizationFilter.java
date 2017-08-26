@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.epam.hostel.resource.ConfigurationManager;
-import com.epam.hostel.resource.MessageManager;
 
 /**
  * Filter to prevent access for users who are not administrators
@@ -35,7 +34,7 @@ public class AdminAuthorizationFilter implements Filter {
 		if (request.getSession().getAttribute(ADMIN_ATTRIBUTE) != null){
 			chain.doFilter(arg0, arg1);
 		} else {
-			request.getSession().setAttribute(LOGIN_ERROR, MessageManager.getProperty(USER_NOT_LOGGED));
+			request.getSession().setAttribute(LOGIN_ERROR, USER_NOT_LOGGED);
 			response.sendRedirect(request.getContextPath() + ConfigurationManager.getProperty(INDEX_PAGE));
 		}
 	}

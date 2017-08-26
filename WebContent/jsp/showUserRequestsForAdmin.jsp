@@ -53,7 +53,6 @@
             <th class="col-lg-1 text-center" align="center"><fmt:message key="su.seat_count" bundle="${rb}"/></th>
             <th class="col-lg-1 text-center" align="center"><fmt:message key="su.price" bundle="${rb}"/></th>
             <th class="col-lg-1 text-center" align="center"><fmt:message key="su.registration_date" bundle="${rb}"/></th>
-            <th class="col-lg-1 text-center" align="center"><fmt:message key="su.last_modified_date" bundle="${rb}"/></th>
             <th class="col-lg-1 text-center" align="center"><fmt:message key="su.beds" bundle="${rb}"/></th>            
           </tr>
           </thead>
@@ -96,10 +95,7 @@
 	            </td>
 	            <td class="col-lg-1">
 	              <fmt:formatDate type = "both" value = "${entry.key.registrationDate}"/>
-	            </td>	 
-	            <td class="col-lg-1">
-	              <fmt:formatDate type = "both" value = "${entry.key.lastModifiedDate}"/>
-	            </td>	           
+	            </td>           
 	            <td class="col-lg-1">
 	            	<c:forEach var="beds" items="${entry.value}">
 	              	${beds.id}; 
@@ -137,7 +133,6 @@
             <th class="col-lg-1 text-center" align="center"><fmt:message key="su.seat_count" bundle="${rb}"/></th>
             <th class="col-lg-1 text-center" align="center"><fmt:message key="su.price" bundle="${rb}"/></th>
             <th class="col-lg-1 text-center" align="center"><fmt:message key="su.registration_date" bundle="${rb}"/></th>
-            <th class="col-lg-1 text-center" align="center"><fmt:message key="su.last_modified_date" bundle="${rb}"/></th>
             <th class="col-lg-1 text-center" align="center"><fmt:message key="su.beds" bundle="${rb}"/></th>            
           </tr>
           </thead>
@@ -180,24 +175,12 @@
 	            </td>
 	            <td class="col-lg-1">
 	              <fmt:formatDate type = "both" value = "${entry.key.registrationDate}"/>
-	            </td>
-	            <td class="col-lg-1">
-	              <fmt:formatDate type = "both" value = "${entry.key.lastModifiedDate}"/>
-	            </td>		            
+	            </td>	            
 	            <td class="col-lg-1">
 	            	<c:forEach var="beds" items="${entry.value}">
 	              	${beds.id}; 
 	              	</c:forEach>
-	            </td>   
-	            <td class="col-lg-1">
-	            	<a href="${pageContext.request.contextPath}/controller?command=approve_request&id=${entry.key.id}"><button type="button" class="btn btn-default btn-block"><fmt:message key="admin.button_approve" bundle="${rb}"/></button></a>
-	            </td>
-	            <td class="col-lg-1">
-	            	<a href="${pageContext.request.contextPath}/controller?command=set_paid_request&id=${entry.key.id}"><button type="button" class="btn btn-default btn-block"><fmt:message key="admin.tr.set_paid_button" bundle="${rb}"/></button></a>
-	            </td>
-	            <td class="col-lg-1">
-	            	<a href="${pageContext.request.contextPath}/controller?command=deny_request&id=${entry.key.id}"><button type="button" class="btn btn-default btn-block"><fmt:message key="admin.button_deny" bundle="${rb}"/></button></a>
-	            </td>        
+	            </td>   	                 
 	          </tr>
           </c:forEach>
           </tbody>

@@ -5,9 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +15,6 @@ import com.epam.hostel.dao.DAOUtil;
 import com.epam.hostel.dao.UserDAO;
 import com.epam.hostel.dao.exception.DAOException;
 import com.epam.hostel.dao.pool.ConnectionPool;
-import com.epam.hostel.service.encrypt.MD5;
 
 public class UserDAOImpl implements UserDAO {
 	private static final ConnectionPool POOL = ConnectionPool.getInstance();
@@ -31,6 +27,9 @@ public class UserDAOImpl implements UserDAO {
 	private static final String SQL_QUESTION = " = ?";
 	private static final String SQL_WHERE_ID = " WHERE id";
 	private static final String SQL_COMMA = " , ";
+	private static final String EXCEPTION_SQL = "SQLException in UserDAO";
+	private static final String EXCEPTION_NO_ROWS_AFFECTED = "Exception: no rows affected.";
+	private static final String EXCEPTION_NO_KEY_OBTAINED = "Exception: no generated key obtained.";
 
 	private static User map(ResultSet resultSet) throws SQLException {
 		User user = new User();
@@ -75,7 +74,7 @@ public class UserDAOImpl implements UserDAO {
 				users.add(user);
 			}
 		} catch (SQLException e) {
-			throw new DAOException("SQLException in UserDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement, resultSet);
 		}
@@ -98,19 +97,19 @@ public class UserDAOImpl implements UserDAO {
 			int affectedRows = statement.executeUpdate();
 
 			if (affectedRows == 0) {
-				throw new DAOException("Creating user failed, no rows affected.");
+				throw new DAOException(EXCEPTION_NO_ROWS_AFFECTED);
 			}
 
 			resultSet = statement.getGeneratedKeys();
 			if (resultSet.next()) {
 				user.setId(resultSet.getInt(1));
 			} else {
-				throw new DAOException("Creating user failed, no generated key obtained.");
+				throw new DAOException(EXCEPTION_NO_KEY_OBTAINED);
 			}
 			
 			isCreated = true;
 		} catch (SQLException e) {
-			throw new DAOException("SQLException in UserDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement, resultSet);
 		}
@@ -133,7 +132,7 @@ public class UserDAOImpl implements UserDAO {
 				users.add(map(resultSet));
 			}
 		} catch (SQLException e) {
-			throw new DAOException("SQLException in UserDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement, resultSet);
 		}
@@ -168,10 +167,10 @@ public class UserDAOImpl implements UserDAO {
 			int affectedRows = statement.executeUpdate();
 
 			if (affectedRows == 0) {
-				throw new DAOException("Updating user failed, no rows affected.");
+				throw new DAOException(EXCEPTION_NO_ROWS_AFFECTED);
 			}			
 		} catch (SQLException e) {			
-			throw new DAOException("SQLException in UserDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement);
 		}
@@ -219,10 +218,10 @@ public class UserDAOImpl implements UserDAO {
 			int affectedRows = statement.executeUpdate();
 
 			if (affectedRows == 0) {
-				throw new DAOException("Deleting user failed, no rows affected.");
+				throw new DAOException(EXCEPTION_NO_ROWS_AFFECTED);
 			}			
 		} catch (SQLException e) {
-			throw new DAOException("SQLException in UserDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement);
 		}

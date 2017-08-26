@@ -24,6 +24,8 @@ import com.epam.hostel.service.exeption.ServiceException;
 import com.epam.hostel.validation.ValidationResult;
 import com.epam.hostel.validation.Validator;
 
+import javafx.beans.binding.BooleanBinding;
+
 public class AdminServiceImpl implements AdminService {
 	private static final String REGEXP_EMAIL = ".+@.+\\..*";
 	private static final String REGEXP_PASSWORD = "(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{6,}";
@@ -68,13 +70,17 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public boolean banUser(int userId) throws ServiceException {		
+	public boolean banUser(int userId, boolean isBan) throws ServiceException {		
 		if (userId == 0) {
 			return false;
 		}
+		int ban = 0;
+		if (isBan){
+			ban = 1;
+		}
 
 		Map<UserCriterion, Object> criterions = new HashMap<>();
-		criterions.put(UserCriterion.IS_BANNED, 1);
+		criterions.put(UserCriterion.IS_BANNED, ban);
 		UserDAO dao = DAOFactory.getUserDAO();
 		RequestDAO requestDAO = DAOFactory.getRequestDAO();
 		try {

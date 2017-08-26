@@ -23,13 +23,7 @@
   <div class="container">	  
   
   	 <!-- ERROR BLOCK -->	
-	 <c:choose>
-		<c:when test = "${registerError != null}">    
-		<%@ include file="common/errorBlock.jsp"%>        
-        </c:when>
-        <c:when test = "${loginError != null}">  
-        <%@ include file="common/errorBlock.jsp"%>            
-        </c:when>
+	 <c:choose>		
         <c:when test = "${requestError != null}">  
         <%@ include file="common/errorBlock.jsp"%>            
         </c:when>        
@@ -228,5 +222,5 @@
   <!-- Bootstrap Core JavaScript -->
   <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>  
   <!--Validate request form -->
-  <script type="text/javascript" async="" src="${pageContext.request.contextPath}/js/validate_request_form.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/js/validate_request_form.js"></script>
  </body>

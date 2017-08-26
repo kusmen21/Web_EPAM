@@ -32,10 +32,11 @@ public interface AdminService
 	 * Bans the user with a specific id
 	 * Sets all user requests to Denied
 	 * @param userId user id
+	 * @param userBan if true - user will be banned, if false - user will be unbanned
 	 * @return true if user was banned, false otherwise
 	 * @throws ServiceException if any exceptions occurred on the DAO or SQL layer
 	 */
-	boolean banUser(int userId) throws ServiceException;
+	boolean banUser(int userId, boolean isBan) throws ServiceException;
 	
 	/**
 	 * Updates the user with the specified values

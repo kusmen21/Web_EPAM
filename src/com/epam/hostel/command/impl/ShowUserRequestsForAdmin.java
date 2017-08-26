@@ -11,16 +11,14 @@ import org.apache.log4j.Logger;
 
 import com.epam.hostel.bean.Bed;
 import com.epam.hostel.bean.Request;
-import com.epam.hostel.bean.User;
 import com.epam.hostel.command.ExtendedСommand;
 import com.epam.hostel.resource.ConfigurationManager;
-import com.epam.hostel.resource.MessageManager;
 import com.epam.hostel.service.RequestService;
 import com.epam.hostel.service.ServiceFactory;
 import com.epam.hostel.service.exeption.ServiceException;
 
 public class ShowUserRequestsForAdmin extends ExtendedСommand {
-	private static Logger log = LogManager.getLogger(ShowUserRequestsForAdmin.class);
+	private static final Logger log = LogManager.getLogger(ShowUserRequestsForAdmin.class);
 	private static final String ERROR_ID_EMPTY = "error.id_empty";
 	private static final String UNKNOWN_ERROR = "error.unknown_error";
 
@@ -40,7 +38,7 @@ public class ShowUserRequestsForAdmin extends ExtendedСommand {
 			try {
 				requests = requestService.getUserRequests(id);
 				if (requests == null){
-					request.getSession().setAttribute(ADMIN_ERROR_ATTRIBUTE, MessageManager.getProperty(UNKNOWN_ERROR));
+					request.getSession().setAttribute(ADMIN_ERROR_ATTRIBUTE, UNKNOWN_ERROR);
 				} else {	
 					Map<Request, List<Bed>> actualRequests = requestService.getActualRequests(requests);
 					Map<Request, List<Bed>> oldRequests = requests;
@@ -54,7 +52,7 @@ public class ShowUserRequestsForAdmin extends ExtendedСommand {
 				page = ConfigurationManager.getProperty(ERROR_PAGE);
 			}
 		} else {
-			request.getSession().setAttribute(ADMIN_ERROR_ATTRIBUTE, MessageManager.getProperty(ERROR_ID_EMPTY));
+			request.getSession().setAttribute(ADMIN_ERROR_ATTRIBUTE, ERROR_ID_EMPTY);
 		}
 
 		return page;

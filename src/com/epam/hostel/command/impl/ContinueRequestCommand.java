@@ -13,17 +13,13 @@ import org.apache.log4j.Logger;
 import com.epam.hostel.bean.User;
 import com.epam.hostel.command.ExtendedСommand;
 import com.epam.hostel.resource.ConfigurationManager;
-import com.epam.hostel.resource.MessageManager;
 import com.epam.hostel.service.RequestService;
 import com.epam.hostel.service.ServiceFactory;
 import com.epam.hostel.service.exeption.ServiceException;
 import com.epam.hostel.validation.ValidationResult;
 
-/**
- * Command to create user request for beds
-**/
 public class ContinueRequestCommand  extends ExtendedСommand {
-	private static Logger log = LogManager.getLogger(ContinueRequestCommand.class);	
+	private static final Logger log = LogManager.getLogger(ContinueRequestCommand.class);	
 	private static final String REQUEST_CREATED_MESSAGE = "info.request";
 	private static final String ERROR_BEDS_NOT_FREE = "request.beds_not_free";
 	private static final String ERROR_DATE_NOT_CORRECT = "request.date_not_correct";
@@ -50,7 +46,7 @@ public class ContinueRequestCommand  extends ExtendedСommand {
 		if (userAttribute != null && userAttribute instanceof User) {
 			user = (User) userAttribute;
 		} else {
-			String errorMessage = MessageManager.getProperty(USER_NOT_LOGGED);
+			String errorMessage = USER_NOT_LOGGED;
 			log.error(errorMessage);
 			request.getSession().setAttribute(LOGIN_ERROR_ATTRIBUTE, errorMessage);
 			page = ConfigurationManager.getProperty(INDEX_PAGE);
@@ -70,25 +66,25 @@ public class ContinueRequestCommand  extends ExtendedСommand {
 			switch (validationResult) {
 			case ALL_RIGHT:
 				page = ConfigurationManager.getProperty(INDEX_PAGE);
-				request.getSession().setAttribute(REQUEST_INFO_ATTRIBUTE, MessageManager.getProperty(REQUEST_CREATED_MESSAGE));
+				request.getSession().setAttribute(REQUEST_INFO_ATTRIBUTE, REQUEST_CREATED_MESSAGE);
 				break;
 			case DATE_INCORRECT:
-				request.getSession().setAttribute(REQUEST_ERROR_ATTRIBUTE, MessageManager.getProperty(ERROR_DATE_NOT_CORRECT));
+				request.getSession().setAttribute(REQUEST_ERROR_ATTRIBUTE, ERROR_DATE_NOT_CORRECT);
 				break;
 			case NO_USER:
-				request.getSession().setAttribute(REQUEST_ERROR_ATTRIBUTE, MessageManager.getProperty(ERROR_NO_USER));
+				request.getSession().setAttribute(REQUEST_ERROR_ATTRIBUTE, ERROR_NO_USER);
 				break;
 			case NO_DATES:
-				request.getSession().setAttribute(REQUEST_ERROR_ATTRIBUTE, MessageManager.getProperty(ERROR_NO_DATE));
+				request.getSession().setAttribute(REQUEST_ERROR_ATTRIBUTE, ERROR_NO_DATE);
 				break;
 			case NO_BEDS:
-				request.getSession().setAttribute(REQUEST_ERROR_ATTRIBUTE, MessageManager.getProperty(ERROR_NO_BEDS));
+				request.getSession().setAttribute(REQUEST_ERROR_ATTRIBUTE, ERROR_NO_BEDS);
 				break;
 			case BEDS_NOT_FREE:
-				request.getSession().setAttribute(REQUEST_ERROR_ATTRIBUTE, MessageManager.getProperty(ERROR_BEDS_NOT_FREE));
+				request.getSession().setAttribute(REQUEST_ERROR_ATTRIBUTE, ERROR_BEDS_NOT_FREE);
 				break;
 			default:
-				request.getSession().setAttribute(REQUEST_ERROR_ATTRIBUTE, MessageManager.getProperty(UNKNOWN_ERROR));
+				request.getSession().setAttribute(REQUEST_ERROR_ATTRIBUTE, UNKNOWN_ERROR);
 			}			
 		} catch (ServiceException e) {
 			log.error(e);

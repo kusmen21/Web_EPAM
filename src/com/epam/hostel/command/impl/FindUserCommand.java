@@ -7,24 +7,22 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import com.epam.hostel.bean.User;
-import com.epam.hostel.command.Command;
 import com.epam.hostel.command.ExtendedСommand;
 import com.epam.hostel.criterion.UserCriterion;
 import com.epam.hostel.resource.ConfigurationManager;
-import com.epam.hostel.resource.MessageManager;
 import com.epam.hostel.service.AdminService;
 import com.epam.hostel.service.ServiceFactory;
 import com.epam.hostel.service.exeption.ServiceException;
 
-public class FindUserCommand  extends ExtendedСommand {
-	private static Logger log = LogManager.getLogger(FindUserCommand.class);
+public class FindUserCommand extends ExtendedСommand {
+	private static final Logger log = LogManager.getLogger(FindUserCommand.class);
 	private static final String ERROR_SET_ONE_FIELD = "error.set_one_field";
 	private static final String ERROR_USER_NOT_FOUND = "error.user_not_found";
 
 	public FindUserCommand() {
 		setAdminPage(true);
 	}
-	
+
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response) {
 		String page = ConfigurationManager.getProperty(SHOW_USER_PAGE);
@@ -36,7 +34,7 @@ public class FindUserCommand  extends ExtendedСommand {
 
 		// check fields
 		if ((email == null || email.isEmpty()) && (phone == null || phone.isEmpty()) && (id == null || id.isEmpty())) {
-			request.getSession().setAttribute(ADMIN_ERROR_ATTRIBUTE, MessageManager.getProperty(ERROR_SET_ONE_FIELD));
+			request.getSession().setAttribute(ADMIN_ERROR_ATTRIBUTE, ERROR_SET_ONE_FIELD);
 			page = ConfigurationManager.getProperty(ADMIN_PAGE);
 		} else {
 			try {
@@ -51,8 +49,7 @@ public class FindUserCommand  extends ExtendedСommand {
 				}
 				// check found user
 				if (user == null) {
-					request.getSession().setAttribute(ADMIN_ERROR_ATTRIBUTE,
-							MessageManager.getProperty(ERROR_USER_NOT_FOUND));
+					request.getSession().setAttribute(ADMIN_ERROR_ATTRIBUTE, ERROR_USER_NOT_FOUND);
 					page = ConfigurationManager.getProperty(ADMIN_PAGE);
 				}
 				request.getSession().setAttribute(FOUND_USER_ATTRIBUTE, user);

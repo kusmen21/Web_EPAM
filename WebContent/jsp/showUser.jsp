@@ -121,7 +121,10 @@
           <a href="${pageContext.request.contextPath}/adminMenu/updateUser"><button type="button" class="btn btn-default btn-block"><fmt:message key="admin.update_user" bundle="${rb}"/></button></a>
         </div>
         <div class="form-group col-lg-3">
-          <a href="${pageContext.request.contextPath}/controller?command=ban_user&id=${foundUser.id}"><button type="button" class="btn btn-default btn-block"><fmt:message key="admin.ban_user" bundle="${rb}"/></button></a>
+          <a href="${pageContext.request.contextPath}/controller?command=ban_user&id=${foundUser.id}&ban=1"><button type="button" class="btn btn-default btn-block"><fmt:message key="admin.ban_user" bundle="${rb}"/></button></a>
+        </div>
+        <div class="form-group col-lg-3">
+          <a href="${pageContext.request.contextPath}/controller?command=ban_user&id=${foundUser.id}&ban=0"><button type="button" class="btn btn-default btn-block"><fmt:message key="admin.unban_user" bundle="${rb}"/></button></a>
         </div>
         <div class="form-group col-lg-3">
           <a href="${pageContext.request.contextPath}/controller?command=show_user_requests_admin&id=${foundUser.id}"><button type="button" class="btn btn-default btn-block"><fmt:message key="admin.show_requests" bundle="${rb}"/></button></a>

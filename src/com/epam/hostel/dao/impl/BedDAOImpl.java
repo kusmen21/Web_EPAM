@@ -6,12 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.epam.hostel.bean.Bed;
-import com.epam.hostel.bean.Request;
 import com.epam.hostel.criterion.BedCriterion;
-import com.epam.hostel.criterion.RequestCriterion;
 import com.epam.hostel.dao.BedDAO;
 import com.epam.hostel.dao.DAOUtil;
 import com.epam.hostel.dao.exception.DAOException;
@@ -22,7 +19,8 @@ public class BedDAOImpl implements BedDAO{
 	private static final String SQL_FIND_FREE_BEDS = "SELECT b.id, b.price, r.id FROM beds b JOIN beds_has_requests br ON b.id = br.beds_id JOIN requests r ON r.id = br.requests_id AND (!(STR_TO_DATE(?, '%Y-%m-%d') < date_from) AND !(STR_TO_DATE(?, '%Y-%m-%d') > date_to)) AND (r.status_id = 0 OR r.status_id = 1 OR r.status_id = 3);";	
 	private static final String SQL_FIND = "SELECT id, price FROM beds WHERE ";
 	private static final String SQL_OR = " OR ";
-	private static final String SQL_QUESTION = " = ?";	
+	private static final String SQL_QUESTION = " = ?";
+	private static final String EXCEPTION_SQL = "SQLException in BedDAO";
 	
 	private static Bed map(ResultSet resultSet) throws SQLException{
 		Bed bed = new Bed();
@@ -48,7 +46,7 @@ public class BedDAOImpl implements BedDAO{
 				freeBeds.add(map(resultSet));
 			}
 		} catch (SQLException e) {
-			throw new DAOException("SQLException in BedDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement, resultSet);
 		}
@@ -83,7 +81,7 @@ public class BedDAOImpl implements BedDAO{
 				beds.add(bed);
 			}
 		} catch (SQLException e) {
-			throw new DAOException("SQLException in RequestDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement, resultSet);
 		}

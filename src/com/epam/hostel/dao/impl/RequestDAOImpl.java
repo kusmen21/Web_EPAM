@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,17 +17,19 @@ import org.apache.log4j.Logger;
 
 import com.epam.hostel.bean.Bed;
 import com.epam.hostel.bean.Request;
-import com.epam.hostel.command.impl.UpdateUserCommand;
 import com.epam.hostel.criterion.BedCriterion;
 import com.epam.hostel.criterion.RequestCriterion;
-import com.epam.hostel.criterion.UserCriterion;
+import com.epam.hostel.dao.BedDAO;
+import com.epam.hostel.dao.DAOFactory;
 import com.epam.hostel.dao.DAOUtil;
 import com.epam.hostel.dao.RequestDAO;
 import com.epam.hostel.dao.exception.DAOException;
 import com.epam.hostel.dao.pool.ConnectionPool;
+import com.epam.hostel.service.exeption.ServiceException;
+import com.epam.hostel.validation.Validator;
 
 public class RequestDAOImpl implements RequestDAO {
-	private static Logger log = LogManager.getLogger(RequestDAOImpl.class);	
+	private static final Logger log = LogManager.getLogger(RequestDAOImpl.class);	
 	private static final ConnectionPool POOL = ConnectionPool.getInstance();
 	private static final String SQL_FIND = "SELECT id, user_id, administrator_id, status_id, date_from, date_to, seat_count, comment, registration_date, last_modified_date, price FROM requests WHERE ";
 	private static final String SQL_LIST_ORDER_BY_ID = "SELECT id, user_id, administrator_id, status_id, date_from, date_to, seat_count, comment, registration_date, last_modified_date, price FROM requests ORDER BY id";
@@ -46,6 +47,10 @@ public class RequestDAOImpl implements RequestDAO {
 	private static final String SQL_COMMA = " , ";
 	private static final String SQL_TWO_QUESTIONS = "(?, ?)";
 	private static final String SQL_WHERE_ID = " WHERE id";
+	private static final String EXCEPTION_SQL = "SQLException in RequestDAO";
+	private static final String EXCEPTION_NO_ROWS_AFFECTED = "Exception: no rows affected.";
+	private static final String EXCEPTION_NO_KEY_OBTAINED = "Exception: no generated key obtained.";
+	private static final String SAVEPOINT = "savepoint";
 
 	private static Request map(ResultSet resultSet) throws SQLException {
 		Request request = new Request();
@@ -118,10 +123,10 @@ public class RequestDAOImpl implements RequestDAO {
 			int affectedRows = statement.executeUpdate();
 
 			if (affectedRows == 0) {
-				throw new DAOException("Updating request failed, no rows affected.");
+				throw new DAOException(EXCEPTION_NO_ROWS_AFFECTED);
 			}
 		} catch (SQLException e) {
-			throw new DAOException("SQLException in RequestDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement);
 		}
@@ -155,7 +160,7 @@ public class RequestDAOImpl implements RequestDAO {
 				requests.add(request);
 			}
 		} catch (SQLException e) {
-			throw new DAOException("SQLException in RequestDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement, resultSet);
 		}
@@ -184,21 +189,21 @@ public class RequestDAOImpl implements RequestDAO {
 		try {
 			connection = POOL.takeConnection();
 			connection.setAutoCommit(false);
-			savepoint = connection.setSavepoint("BeforeCreate");
+			savepoint = connection.setSavepoint(SAVEPOINT);
 						
 			// insert into REQUESTS
 			statement = DAOUtil.prepareStatement(connection, SQL_CREATE, true, values);
 			int affectedRows = statement.executeUpdate();
 			if (affectedRows == 0) {
 				connection.rollback(savepoint);
-				throw new DAOException("Creating request failed, no rows affected.");
+				throw new DAOException(EXCEPTION_NO_ROWS_AFFECTED);
 			}
 			resultSet = statement.getGeneratedKeys();
 			if (resultSet.next()) {
 				request.setId(resultSet.getInt(1));
 			} else {
 				connection.rollback(savepoint);
-				throw new DAOException("Creating request failed, no generated key obtained.");
+				throw new DAOException(EXCEPTION_NO_KEY_OBTAINED);
 			}
 			
 			//insert into BEDS_HAS_REQUESTS
@@ -220,7 +225,7 @@ public class RequestDAOImpl implements RequestDAO {
 			affectedRows = statement.executeUpdate();
 			if (affectedRows == 0) {
 				connection.rollback(savepoint);
-				throw new DAOException("Creating request failed, no rows affected.");
+				throw new DAOException(EXCEPTION_NO_ROWS_AFFECTED);
 			}
 			
 			connection.commit();
@@ -230,7 +235,7 @@ public class RequestDAOImpl implements RequestDAO {
 			} catch (SQLException e1) {
 				log.error(e1);
 			}			
-			throw new DAOException("SQLException in RequestDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement, resultSet);
 		}
@@ -252,7 +257,7 @@ public class RequestDAOImpl implements RequestDAO {
 				requests.add(map(resultSet));
 			}
 		} catch (SQLException e) {
-			throw new DAOException("SQLException in RequestDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement, resultSet);
 		}
@@ -269,14 +274,14 @@ public class RequestDAOImpl implements RequestDAO {
 		try {
 			connection = POOL.takeConnection();
 			connection.setAutoCommit(false);
-			savepoint = connection.setSavepoint("BeforeDelete");
+			savepoint = connection.setSavepoint(SAVEPOINT);
 			
 			// delete from BEDS_HAS_REQUESTS
 			statement = DAOUtil.prepareStatement(connection, SQL_DELETE_BEDS_HAS_REQUESTS, false, values);
 			int affectedRows = statement.executeUpdate();
 			if (affectedRows == 0) {
 				connection.rollback(savepoint);
-				throw new DAOException("Deleting request failed, no rows affected.");
+				throw new DAOException(EXCEPTION_NO_ROWS_AFFECTED);
 			}
 			
 			// delete from REQUESTS
@@ -284,7 +289,7 @@ public class RequestDAOImpl implements RequestDAO {
 			affectedRows = statement.executeUpdate();
 			if (affectedRows == 0) {
 				connection.rollback(savepoint);
-				throw new DAOException("Deleting request failed, no rows affected.");
+				throw new DAOException(EXCEPTION_NO_ROWS_AFFECTED);
 			}
 			
 			connection.commit();			
@@ -294,7 +299,7 @@ public class RequestDAOImpl implements RequestDAO {
 			} catch (SQLException e1) {
 				log.error(e1);
 			}
-			throw new DAOException("SQLException in RequestDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement);
 		}
@@ -312,7 +317,7 @@ public class RequestDAOImpl implements RequestDAO {
 			statement = DAOUtil.prepareStatement(connection, SQL_SET_USER_REQUESTS_DENIED, false, values);
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			throw new DAOException("SQLException in RequestDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement, resultSet);
 		}
@@ -333,7 +338,7 @@ public class RequestDAOImpl implements RequestDAO {
 
 			requestsAndBeds = mapppingRequestsAndBeds(resultSet);
 		} catch (SQLException e) {
-			throw new DAOException("SQLException in RequestDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement, resultSet);
 		}
@@ -356,7 +361,7 @@ public class RequestDAOImpl implements RequestDAO {
 
 			requestsAndBeds = mapppingRequestsAndBeds(resultSet);
 		} catch (SQLException e) {
-			throw new DAOException("SQLException in RequestDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement, resultSet);
 		}

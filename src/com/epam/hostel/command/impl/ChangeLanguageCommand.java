@@ -7,16 +7,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import com.epam.hostel.command.Command;
 import com.epam.hostel.command.ExtendedСommand;
 import com.epam.hostel.resource.ConfigurationManager;
-import com.epam.hostel.resource.MessageManager;
 
-/**
- * Command provides change language to English or Russian language 
- */
 public class ChangeLanguageCommand extends ExtendedСommand {
-	private static Logger log = LogManager.getLogger(ChangeLanguageCommand.class);
+	private static final Logger log = LogManager.getLogger(ChangeLanguageCommand.class);
 	private static final String LOCALE_EMPTY_MESSAGE = "error.locale_empty";
 	private static final String RUSSIAN = "ru";
 	private static final String ENGLISH = "en";
@@ -43,7 +38,7 @@ public class ChangeLanguageCommand extends ExtendedСommand {
 				}
 			}
 		} else {
-			String errorMessage =  MessageManager.getProperty(LOCALE_EMPTY_MESSAGE);
+			String errorMessage =  LOCALE_EMPTY_MESSAGE;
 			log.error(errorMessage);
 			request.getSession().setAttribute(LOGIN_ERROR_ATTRIBUTE, errorMessage);
 		}

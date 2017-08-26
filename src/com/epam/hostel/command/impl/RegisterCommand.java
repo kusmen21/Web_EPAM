@@ -7,10 +7,8 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import com.epam.hostel.bean.User;
-import com.epam.hostel.command.Command;
 import com.epam.hostel.command.ExtendedСommand;
 import com.epam.hostel.resource.ConfigurationManager;
-import com.epam.hostel.resource.MessageManager;
 import com.epam.hostel.service.LogInService;
 import com.epam.hostel.service.ServiceFactory;
 import com.epam.hostel.service.exeption.ServiceException;
@@ -18,7 +16,7 @@ import com.epam.hostel.validation.ValidationResult;
 
 public class RegisterCommand  extends ExtendedСommand {
 
-	private static Logger log = LogManager.getLogger(RegisterCommand.class);
+	private static final Logger log = LogManager.getLogger(RegisterCommand.class);
 	private static final String REGISTER_INFO = "info.register";
 	private static final String ERROR_SET_CORRECT_EMAIL = "register.set_correct_email";
 	private static final String ERROR_SET_CORRECT_PASSWORD = "register.set_correct_password";
@@ -35,6 +33,7 @@ public class RegisterCommand  extends ExtendedСommand {
 		setRedirect(true);
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	public String execute(HttpServletRequest request, HttpServletResponse response) {
 		String page = ConfigurationManager.getProperty(REGISTRATION_PAGE);
@@ -53,37 +52,37 @@ public class RegisterCommand  extends ExtendedСommand {
 					User registeredUser = logInService.getUser(email, password);
 					request.getSession().setAttribute(USER_ATTRIBUTE, registeredUser);
 					page = ConfigurationManager.getProperty(INDEX_PAGE);
-					request.getSession().setAttribute(REGISTER_INFO_ATTRIBUTE, MessageManager.getProperty(REGISTER_INFO));
+					request.getSession().setAttribute(REGISTER_INFO_ATTRIBUTE, REGISTER_INFO);
 					break;
 				case EMAIL_INCORRECT:
-					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , MessageManager.getProperty(ERROR_SET_CORRECT_EMAIL));
+					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , ERROR_SET_CORRECT_EMAIL);
 					break;					
 				case PASS_INCORRECT:
-					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , MessageManager.getProperty(ERROR_SET_CORRECT_PASSWORD));
+					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , ERROR_SET_CORRECT_PASSWORD);
 					break;
 				case LNAME_INCORRECT:
-					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , MessageManager.getProperty(ERROR_SET_CORRECT_LNAME));
+					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , ERROR_SET_CORRECT_LNAME);
 					break;
 				case FNAME_INCORRECT:
-					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , MessageManager.getProperty(ERROR_SET_CORRECT_FNAME));
+					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , ERROR_SET_CORRECT_FNAME);
 					break;
 				case DATE_INCORRECT:
-					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , MessageManager.getProperty(ERROR_SET_CORRECT_BIRTH_DATE));
+					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , ERROR_SET_CORRECT_BIRTH_DATE);
 					break;
 				case PHONE_INCORRECT:
-					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , MessageManager.getProperty(ERROR_SET_CORRECT_PHONE));
+					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , ERROR_SET_CORRECT_PHONE);
 					break;			       
 				case PHONE_NOT_UNIQUE:
-					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , MessageManager.getProperty(ERROR_PHONE_NOT_UNIQUE));
+					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , ERROR_PHONE_NOT_UNIQUE);
 					break;
 				case EMAIL_NOT_UNIQUE:
-					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , MessageManager.getProperty(ERROR_EMAIL_NOT_UNIQUE));				
+					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , ERROR_EMAIL_NOT_UNIQUE);				
 					break;			    
 				case NOT_ALL_FIELDS:
-					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , MessageManager.getProperty(ERROR_NOT_ALL_FIELDS));
+					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , ERROR_NOT_ALL_FIELDS);
 					break;
 				case UNKNOWN_ERROR:
-					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , MessageManager.getProperty(ERROR_UNKNOWN));
+					request.getSession().setAttribute(REGISTER_ERROR_ATTRIBUTE , ERROR_UNKNOWN);
 					break;							
 			}			
 		} catch (ServiceException e){

@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,13 +16,11 @@ import com.epam.hostel.command.CommandFactory;
 import com.epam.hostel.command.ExtendedСommand;
 import com.epam.hostel.dao.pool.ConnectionPool;
 import com.epam.hostel.resource.ConfigurationManager;
-import com.epam.hostel.resource.MessageManager;
 
 @WebServlet(name = "controller", value = "/controller")
-@MultipartConfig
 public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static Logger log = LogManager.getLogger(Controller.class);
+	private static final Logger log = LogManager.getLogger(Controller.class);
 	private static final String USER_ATTRIBUTE = "user";
 	private static final String ADMIN_ATTRIBUTE = "admin";
 	private static final String INDEX_PAGE = "page.index";
@@ -33,15 +30,7 @@ public class Controller extends HttpServlet {
 	private static final String PAGE_IS_NULL_LOG = "page is null; command = ";
 	private static final String LAST_COMMAND_ATTRIBUTE = "lastCommand";
 	private static final String DELIMITER = "?";
-	/**
-	 * method checks the possibility of executing the command for the current user, 
-	 * executes the command, 
-	 * forwards to the next page	
-	 * @param request request from client side
-	 * @param response
-	 * @throws ServletException
-	 * @throws IOException
-	 */
+	
 	private void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		ExtendedСommand command = (ExtendedСommand) CommandFactory.defineCommand(request);		
@@ -50,7 +39,7 @@ public class Controller extends HttpServlet {
 		if (command.isUserPage()) {
 			Object user = request.getSession().getAttribute(USER_ATTRIBUTE);
 			if (user == null) {
-				request.getSession().setAttribute(LOGIN_ERROR_ATTRIBUTE, MessageManager.getProperty(USER_NOT_LOGGED_ERROR));
+				request.getSession().setAttribute(LOGIN_ERROR_ATTRIBUTE, USER_NOT_LOGGED_ERROR);
 				page = ConfigurationManager.getProperty(INDEX_PAGE);
 				response.sendRedirect(request.getContextPath() + page);
 			}			
@@ -59,7 +48,7 @@ public class Controller extends HttpServlet {
 			if (command.isAdminPage()) {
 				Object admin = request.getSession().getAttribute(ADMIN_ATTRIBUTE);
 				if (admin == null) {
-					request.getSession().setAttribute(LOGIN_ERROR_ATTRIBUTE, MessageManager.getProperty(ADMIN_NOT_LOGGED_ERROR));
+					request.getSession().setAttribute(LOGIN_ERROR_ATTRIBUTE, ADMIN_NOT_LOGGED_ERROR);
 					page = ConfigurationManager.getProperty(INDEX_PAGE);
 					response.sendRedirect(request.getContextPath() + page);
 				}

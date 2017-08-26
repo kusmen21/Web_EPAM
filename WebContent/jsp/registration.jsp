@@ -27,13 +27,7 @@
 	<c:choose>
 		<c:when test = "${registerError != null}">    
 		<%@ include file="common/errorBlock.jsp"%>        
-        </c:when>
-        <c:when test = "${loginError != null}">  
-        <%@ include file="common/errorBlock.jsp"%>            
-        </c:when>
-        <c:when test = "${requestError != null}">  
-        <%@ include file="common/errorBlock.jsp"%>            
-        </c:when>        
+        </c:when>      
     </c:choose>    
 
     <!-- Registration -->
@@ -71,7 +65,7 @@
           <label for="userPassword2" class="col-sm-2 col-form-label"><fmt:message key="register.confirm_password" bundle="${rb}"/><fmt:message key="register.star" bundle="${rb}"/></label>
           <div class="col-sm-6">
             <div>
-              <input type="password" name="password2" class="form-control" id="userPassword2" placeholder=<fmt:message key="register.confirm_password" bundle="${rb}"/>" oninput="validate(this.form)">
+              <input type="password" name="password2" class="form-control" id="userPassword2" placeholder="<fmt:message key="register.confirm_password" bundle="${rb}"/>" oninput="validate(this.form)">
               <span id="password2_error_set_password" class="error_message"><fmt:message key="register.confirm_password" bundle="${rb}"/></span>
               <span id="password2_error_not_equals" class="error_message"><fmt:message key="register.passwords_not_match" bundle="${rb}"/></span>
             </div>
@@ -140,7 +134,7 @@
   <!-- Bootstrap Core JavaScript -->
   <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>  
   <!--Validate register form -->
-  <script type="text/javascript" async="" src="${pageContext.request.contextPath}/js/validate_register_form.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/js/validate_register_form.js"></script>
 </body>
 
 </html>

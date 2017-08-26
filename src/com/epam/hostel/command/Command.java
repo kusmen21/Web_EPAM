@@ -21,6 +21,7 @@ public interface Command {
 	String DATE_FROM = "dateFrom";
 	String DATE_TO = "dateTo";
 	String LOCALE = "locale";
+	String BAN = "ban";
 	// redirect pages
 	String ADMIN_PAGE = "page.admin_menu";
 	String ERROR_PAGE = "page.error";
@@ -30,9 +31,7 @@ public interface Command {
 	String REGISTRATION_PAGE = "page.registration";
 	String UPDATE_USER_PAGE = "page.update_user";
 	String NOT_APPROVED_PAGE = "page.not_approved";
-	//String RELOAD_NOT_APPROVED_REQUESTS_PAGE = "page.reload_not_approved_requests";
 	String USER_REQUESTS_PAGE = "page.user_requests";
-	//String RELOAD_USER_REQUESTS_PAGE = "page.reload_user_requests";
 	String TODAY_REQUESTS_PAGE = "page.today_requests";
 	String USER_REQUESTS_ADMIN_PAGE = "page.user_requests_admin";
 	// request or session attributes	

@@ -22,13 +22,15 @@ public class AdministratorDAOImpl implements AdministratorDAO
 	private static final ConnectionPool POOL = ConnectionPool.getInstance();
 	private static final String SQL_FIND = "SELECT id, phone, password, first_name, last_name, birth_date FROM administrators WHERE " ;	
 	private static final String SQL_LIST_ORDER_BY_ID = "SELECT id, phone, password, first_name, last_name, birth_date FROM administrators ORDER BY id";
-	private static final String SQL_CREATE = "INSERT INTO administrators (phone, password, first_name, last_name, birth_date) VALUES (?, ?, ?, ?, ?)";	
-	private static final String SQL_DELETE = "DELETE FROM administrators WHERE id = ?";
+	private static final String SQL_CREATE = "INSERT INTO administrators (phone, password, first_name, last_name, birth_date) VALUES (?, ?, ?, ?, ?)";
 	private static final String SQL_UPDATE = "UPDATE administrators SET ";
 	private static final String SQL_AND = " AND ";
 	private static final String SQL_QUESTION = " = ?";
 	private static final String SQL_WHERE_ID = " WHERE id";
 	private static final String SQL_COMMA = " , ";
+	private static final String EXCEPTION_SQL = "SQLException in AdministratorDAO";
+	private static final String EXCEPTION_NO_ROWS_AFFECTED = "Exception: no rows affected.";
+	private static final String EXCEPTION_NO_KEY_OBTAINED = "Exception: no generated key obtained.";
 	
 	
 	private static Administrator map(ResultSet resultSet) throws SQLException {
@@ -70,7 +72,7 @@ public class AdministratorDAOImpl implements AdministratorDAO
 				administrators.add(administrator);
 			}
 		} catch (SQLException e) {
-			throw new DAOException("SQLException in AdministratorDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement, resultSet);
 		}
@@ -91,18 +93,18 @@ public class AdministratorDAOImpl implements AdministratorDAO
 			int affectedRows = statement.executeUpdate();
 
 			if (affectedRows == 0) {
-				throw new DAOException("Creating administrator failed, no rows affected.");
+				throw new DAOException(EXCEPTION_NO_ROWS_AFFECTED);
 			}
 
 			resultSet = statement.getGeneratedKeys();
 			if (resultSet.next()) {
 				administrator.setId(resultSet.getInt(1));
 			} else {
-				throw new DAOException("Creating administrator failed, no generated key obtained.");
+				throw new DAOException(EXCEPTION_NO_KEY_OBTAINED);
 			}
 
 		} catch (SQLException e) {
-			throw new DAOException("SQLException in AdministratorDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement, resultSet);
 		}
@@ -124,7 +126,7 @@ public class AdministratorDAOImpl implements AdministratorDAO
 				administrators.add(map(resultSet));
 			}
 		} catch (SQLException e) {
-			throw new DAOException("SQLException in AdministratorDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement, resultSet);
 		}
@@ -159,10 +161,10 @@ public class AdministratorDAOImpl implements AdministratorDAO
 			int affectedRows = statement.executeUpdate();
 
 			if (affectedRows == 0) {
-				throw new DAOException("Updating administrator failed, no rows affected.");
+				throw new DAOException(EXCEPTION_NO_ROWS_AFFECTED);
 			}			
 		} catch (SQLException e) {
-			throw new DAOException("SQLException in AdministratorDAO", e);
+			throw new DAOException(EXCEPTION_SQL, e);
 		} finally {
 			POOL.closeConnection(connection, statement);
 		}

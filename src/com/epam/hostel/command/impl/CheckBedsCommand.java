@@ -9,9 +9,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import com.epam.hostel.bean.Bed;
-import com.epam.hostel.command.Command;
 import com.epam.hostel.command.ExtendedСommand;
-import com.epam.hostel.resource.MessageManager;
 import com.epam.hostel.service.RequestService;
 import com.epam.hostel.service.ServiceFactory;
 import com.epam.hostel.service.exeption.ServiceException;
@@ -20,7 +18,7 @@ import com.epam.hostel.service.exeption.ServiceException;
  * Command provides checking not free beds; return: json response with not free beds
  */
 public class CheckBedsCommand  extends ExtendedСommand {
-	private static Logger log = LogManager.getLogger(CheckBedsCommand.class);
+	private static final Logger log = LogManager.getLogger(CheckBedsCommand.class);
 	private final static String DATES_EMPTY_MESSAGE = "error.dates_empty";
 	private final static String LEFT_BRACKET = "[";
 	private final static String RIGHT_BRACKET = "]";
@@ -50,7 +48,7 @@ public class CheckBedsCommand  extends ExtendedСommand {
 			}
 			sb.append(RIGHT_BRACKET);
 		} else {
-			log.error(MessageManager.getProperty(DATES_EMPTY_MESSAGE));
+			log.error(DATES_EMPTY_MESSAGE);
 		}
 
 		return sb.toString();
